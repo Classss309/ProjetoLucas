@@ -99,7 +99,7 @@
             // cadastrarHospedeToolStripMenuItem
             // 
             this.cadastrarHospedeToolStripMenuItem.Name = "cadastrarHospedeToolStripMenuItem";
-            this.cadastrarHospedeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cadastrarHospedeToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.cadastrarHospedeToolStripMenuItem.Text = "Cadastrar Hospede";
             this.cadastrarHospedeToolStripMenuItem.Click += new System.EventHandler(this.cadastrarHospedeToolStripMenuItem_Click);
             // 
@@ -114,7 +114,7 @@
             // cadastrarEnderecoToolStripMenuItem
             // 
             this.cadastrarEnderecoToolStripMenuItem.Name = "cadastrarEnderecoToolStripMenuItem";
-            this.cadastrarEnderecoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cadastrarEnderecoToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.cadastrarEnderecoToolStripMenuItem.Text = "Cadastrar Endereco";
             this.cadastrarEnderecoToolStripMenuItem.Click += new System.EventHandler(this.cadastrarEnderecoToolStripMenuItem_Click);
             // 
@@ -132,7 +132,7 @@
             this.novaReservaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cadastrarNovaReservaToolStripMenuItem});
             this.novaReservaToolStripMenuItem.Name = "novaReservaToolStripMenuItem";
-            this.novaReservaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.novaReservaToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.novaReservaToolStripMenuItem.Text = "Nova Reserva";
             // 
             // cadastrarNovaReservaToolStripMenuItem
@@ -154,7 +154,7 @@
             // sobreToolStripMenuItem1
             // 
             this.sobreToolStripMenuItem1.Name = "sobreToolStripMenuItem1";
-            this.sobreToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.sobreToolStripMenuItem1.Size = new System.Drawing.Size(104, 22);
             this.sobreToolStripMenuItem1.Text = "Sobre";
             this.sobreToolStripMenuItem1.Click += new System.EventHandler(this.sobreToolStripMenuItem1_Click);
             // 
@@ -163,9 +163,9 @@
             this.flpBOTTON.BackColor = System.Drawing.Color.Transparent;
             this.flpBOTTON.Controls.Add(this.label1);
             this.flpBOTTON.Controls.Add(this.label2);
-            this.flpBOTTON.Location = new System.Drawing.Point(0, 464);
+            this.flpBOTTON.Location = new System.Drawing.Point(0, 495);
             this.flpBOTTON.Name = "flpBOTTON";
-            this.flpBOTTON.Size = new System.Drawing.Size(934, 53);
+            this.flpBOTTON.Size = new System.Drawing.Size(934, 22);
             this.flpBOTTON.TabIndex = 1;
             // 
             // label1
@@ -174,20 +174,20 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(120, 13);
+            this.label1.Size = new System.Drawing.Size(93, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "DESENVOLVIDO POR:";
+            this.label1.Text = "Desenvolvido por:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.label2.Location = new System.Drawing.Point(129, 0);
+            this.label2.Location = new System.Drawing.Point(102, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(140, 13);
+            this.label2.Size = new System.Drawing.Size(193, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Renan Carvalho dos Santos";
+            this.label2.Text = "Renan Carvalho dos Santos;João;Cayc";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // frmMenu
