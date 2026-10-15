@@ -8,9 +8,9 @@ namespace ProjetoLucas.View
 {
     public partial class frmCadastroFilial : Form
     {
-        private int _idFilialAtual = 0;
-        private FilialController _filialCtrl = new FilialController();
-        private EnderecoController _enderecoCtrl = new EnderecoController();
+        int idAtual = 0;
+        FilialController ctrl = new FilialController();
+        EnderecoController ctrlEnd = new EnderecoController();
 
         public frmCadastroFilial()
         {
@@ -25,47 +25,31 @@ namespace ProjetoLucas.View
 
         private void CarregarComboEnderecos()
         {
-            try
+            EnderecoCollection enderecos = ctrlEnd.GetAll();
+            List<object> itens = new List<object>();
+
+            foreach (Endereco end in enderecos)
             {
-                EnderecoCollection enderecos = _enderecoCtrl.GetAll();
-                var itens = new List<object>();
-                foreach (Endereco end in enderecos)
-                {
-                    itens.Add(new { Text = end.Logradouro + ", " + end.Numero + " – " + end.Cidade + "/" + end.Estado, Value = end.IdEndereco });
-                }
-                cboEndereco.DataSource = itens;
-                cboEndereco.DisplayMember = "Text";
-                cboEndereco.ValueMember = "Value";
-                if (itens.Count == 0)
-                    cboEndereco.SelectedIndex = -1;
+                itens.Add(new { Text = end.Logradouro + ", " + end.Numero + " - " + end.Cidade + "/" + end.Estado, Value = end.IdEndereco });
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao carregar endereços: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
+            cboEndereco.DataSource    = itens;
+            cboEndereco.DisplayMember = "Text";
+            cboEndereco.ValueMember   = "Value";
         }
 
         private void CarregarGrid()
         {
-            try
-            {
-                dgvFiliais.DataSource = _filialCtrl.GetAll();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao carregar filiais: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            dgvFiliais.DataSource = ctrl.GetAll();
         }
 
         private void LimparCampos()
         {
-            _idFilialAtual = 0;
-            txtRazaoSocial.Text = string.Empty;
-            txtCNPJ.Text = string.Empty;
-            txtTelefone.Text = string.Empty;
-            txtEmail.Text = string.Empty;
+            idAtual = 0;
+            txtRazaoSocial.Text = "";
+            txtCNPJ.Text = "";
+            txtTelefone.Text = "";
+            txtEmail.Text = "";
             nudAvaliacao.Value = 1;
             if (cboEndereco.Items.Count > 0) cboEndereco.SelectedIndex = 0;
             chkAtivo.Checked = true;
@@ -73,40 +57,30 @@ namespace ProjetoLucas.View
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtRazaoSocial.Text))
+            if (txtRazaoSocial.Text == "")
             {
-                MessageBox.Show("Razão Social é obrigatória.", "Validação",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Informe a Razão Social.");
                 return;
             }
 
-            try
-            {
-                Filial filial = new Filial();
-                filial.idFilial = _idFilialAtual;
-                filial.RazaoSocial = txtRazaoSocial.Text.Trim();
-                filial.CNPJ = txtCNPJ.Text.Trim();
-                filial.Telefone = txtTelefone.Text.Trim();
-                filial.Email = txtEmail.Text.Trim();
-                filial.Avaliacao = nudAvaliacao.Value;
-                filial.IdEndereco = cboEndereco.SelectedValue != null ? Convert.ToInt32(cboEndereco.SelectedValue) : 0;
-                filial.Ativo = chkAtivo.Checked;
+            Filial f = new Filial();
+            f.idFilial    = idAtual;
+            f.RazaoSocial = txtRazaoSocial.Text;
+            f.CNPJ        = txtCNPJ.Text;
+            f.Telefone    = txtTelefone.Text;
+            f.Email       = txtEmail.Text;
+            f.Avaliacao   = nudAvaliacao.Value;
+            f.IdEndereco  = cboEndereco.SelectedValue != null ? Convert.ToInt32(cboEndereco.SelectedValue) : 0;
+            f.Ativo       = chkAtivo.Checked;
 
-                if (_idFilialAtual == 0)
-                    _filialCtrl.Inserir(filial);
-                else
-                    _filialCtrl.Alterar(filial);
+            if (idAtual == 0)
+                ctrl.Inserir(f);
+            else
+                ctrl.Alterar(f);
 
-                MessageBox.Show("Filial salva com sucesso!", "Sucesso",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LimparCampos();
-                CarregarGrid();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao salvar filial: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            MessageBox.Show("Salvo com sucesso!");
+            LimparCampos();
+            CarregarGrid();
         }
 
         private void btnNovo_Click(object sender, EventArgs e)
@@ -116,78 +90,46 @@ namespace ProjetoLucas.View
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
-            if (_idFilialAtual == 0)
+            if (idAtual == 0)
             {
-                MessageBox.Show("Selecione uma filial para excluir.", "Aviso",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione uma filial para excluir.");
                 return;
             }
 
-            DialogResult result = MessageBox.Show(
-                "Deseja realmente excluir esta filial?", "Confirmação",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
+            if (MessageBox.Show("Deseja excluir?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                try
-                {
-                    _filialCtrl.Excluir(_idFilialAtual);
-                    MessageBox.Show("Filial excluída com sucesso!", "Sucesso",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LimparCampos();
-                    CarregarGrid();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao excluir filial: " + ex.Message, "Erro",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                ctrl.Excluir(idAtual);
+                MessageBox.Show("Excluído com sucesso!");
+                LimparCampos();
+                CarregarGrid();
             }
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(txtBusca.Text))
-                    CarregarGrid();
-                else
-                    dgvFiliais.DataSource = _filialCtrl.GetFilials(txtBusca.Text);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao buscar filiais: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            if (txtBusca.Text == "")
+                CarregarGrid();
+            else
+                dgvFiliais.DataSource = ctrl.GetFilials(txtBusca.Text);
         }
 
         private void dgvFiliais_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            try
-            {
-                DataGridViewRow row = dgvFiliais.Rows[e.RowIndex];
-                _idFilialAtual = Convert.ToInt32(row.Cells["idFilial"].Value);
+            DataGridViewRow row = dgvFiliais.Rows[e.RowIndex];
+            idAtual              = Convert.ToInt32(row.Cells["idFilial"].Value);
 
-                Filial filial = _filialCtrl.GetById(_idFilialAtual);
-                if (filial == null) return;
+            Filial f = ctrl.GetById(idAtual);
+            if (f == null) return;
 
-                txtRazaoSocial.Text = filial.RazaoSocial;
-                txtCNPJ.Text = filial.CNPJ;
-                txtTelefone.Text = filial.Telefone;
-                txtEmail.Text = filial.Email;
-                nudAvaliacao.Value = filial.Avaliacao >= nudAvaliacao.Minimum && filial.Avaliacao <= nudAvaliacao.Maximum
-                    ? filial.Avaliacao : nudAvaliacao.Minimum;
-                chkAtivo.Checked = filial.Ativo;
-
-                try { cboEndereco.SelectedValue = filial.IdEndereco; } catch { }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao selecionar filial: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            txtRazaoSocial.Text = f.RazaoSocial;
+            txtCNPJ.Text        = f.CNPJ;
+            txtTelefone.Text    = f.Telefone;
+            txtEmail.Text       = f.Email;
+            nudAvaliacao.Value  = f.Avaliacao;
+            chkAtivo.Checked    = f.Ativo;
+            cboEndereco.SelectedValue = f.IdEndereco;
         }
     }
 }

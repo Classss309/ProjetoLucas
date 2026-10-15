@@ -8,77 +8,77 @@ namespace ProjetoLucas.Controller
 {
     public class HospedeController
     {
-        private DataBaseService _database = new DataBaseService();
+        DataBaseService banco = new DataBaseService();
 
         public int Inserir(Hospede hospede)
         {
             string sql = "INSERT INTO tblHospede (Nome, CPF, RG, Telefone, Email, DataNascimento, Nacionalidade, Ativo) " +
                          "VALUES (@Nome, @CPF, @RG, @Telefone, @Email, @DataNascimento, @Nacionalidade, @Ativo)";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@Nome", hospede.Nome);
-            command.Parameters.AddWithValue("@CPF", hospede.CPF);
-            command.Parameters.AddWithValue("@RG", hospede.RG ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@Telefone", hospede.Telefone ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@Email", hospede.Email ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@DataNascimento", hospede.DataNascimento);
-            command.Parameters.AddWithValue("@Nacionalidade", hospede.Nacionalidade);
-            command.Parameters.AddWithValue("@Ativo", hospede.Ativo);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@Nome", hospede.Nome);
+            cmd.Parameters.AddWithValue("@CPF", hospede.CPF);
+            cmd.Parameters.AddWithValue("@RG", hospede.RG);
+            cmd.Parameters.AddWithValue("@Telefone", hospede.Telefone);
+            cmd.Parameters.AddWithValue("@Email", hospede.Email);
+            cmd.Parameters.AddWithValue("@DataNascimento", hospede.DataNascimento);
+            cmd.Parameters.AddWithValue("@Nacionalidade", hospede.Nacionalidade);
+            cmd.Parameters.AddWithValue("@Ativo", hospede.Ativo);
 
-            return _database.ExecuteSql(command);
+            return banco.ExecuteSql(cmd);
         }
 
         public int Alterar(Hospede hospede)
         {
-            string sql = "UPDATE tblHospede SET Nome = @Nome, CPF = @CPF, RG = @RG, Telefone = @Telefone, " +
-                         "Email = @Email, DataNascimento = @DataNascimento, Nacionalidade = @Nacionalidade, " +
-                         "Ativo = @Ativo WHERE IdHospede = @IdHospede";
+            string sql = "UPDATE tblHospede SET Nome = @Nome, CPF = @CPF, RG = @RG, " +
+                         "Telefone = @Telefone, Email = @Email, DataNascimento = @DataNascimento, " +
+                         "Nacionalidade = @Nacionalidade, Ativo = @Ativo WHERE IdHospede = @IdHospede";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@IdHospede", hospede.IdHospede);
-            command.Parameters.AddWithValue("@Nome", hospede.Nome);
-            command.Parameters.AddWithValue("@CPF", hospede.CPF);
-            command.Parameters.AddWithValue("@RG", hospede.RG ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@Telefone", hospede.Telefone ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@Email", hospede.Email ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@DataNascimento", hospede.DataNascimento);
-            command.Parameters.AddWithValue("@Nacionalidade", hospede.Nacionalidade);
-            command.Parameters.AddWithValue("@Ativo", hospede.Ativo);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@IdHospede", hospede.IdHospede);
+            cmd.Parameters.AddWithValue("@Nome", hospede.Nome);
+            cmd.Parameters.AddWithValue("@CPF", hospede.CPF);
+            cmd.Parameters.AddWithValue("@RG", hospede.RG);
+            cmd.Parameters.AddWithValue("@Telefone", hospede.Telefone);
+            cmd.Parameters.AddWithValue("@Email", hospede.Email);
+            cmd.Parameters.AddWithValue("@DataNascimento", hospede.DataNascimento);
+            cmd.Parameters.AddWithValue("@Nacionalidade", hospede.Nacionalidade);
+            cmd.Parameters.AddWithValue("@Ativo", hospede.Ativo);
 
-            return _database.ExecuteSql(command);
+            return banco.ExecuteSql(cmd);
         }
 
         public int Excluir(int idHospede)
         {
             string sql = "DELETE FROM tblHospede WHERE IdHospede = @IdHospede";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@IdHospede", idHospede);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@IdHospede", idHospede);
 
-            return _database.ExecuteSql(command);
+            return banco.ExecuteSql(cmd);
         }
 
         public Hospede GetById(int idHospede)
         {
             string sql = "SELECT * FROM tblHospede WHERE IdHospede = @IdHospede";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@IdHospede", idHospede);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@IdHospede", idHospede);
 
-            DataTable dataTable = _database.GetDataTable(command);
+            DataTable dt = banco.GetDataTable(cmd);
 
-            if (dataTable.Rows.Count > 0)
+            if (dt.Rows.Count > 0)
             {
                 Hospede hospede = new Hospede();
-                hospede.IdHospede = (int)dataTable.Rows[0]["IdHospede"];
-                hospede.Nome = dataTable.Rows[0]["Nome"].ToString();
-                hospede.CPF = dataTable.Rows[0]["CPF"].ToString();
-                hospede.RG = dataTable.Rows[0]["RG"].ToString();
-                hospede.Telefone = dataTable.Rows[0]["Telefone"].ToString();
-                hospede.Email = dataTable.Rows[0]["Email"].ToString();
-                hospede.DataNascimento = Convert.ToDateTime(dataTable.Rows[0]["DataNascimento"]);
-                hospede.Nacionalidade = dataTable.Rows[0]["Nacionalidade"].ToString();
-                hospede.Ativo = Convert.ToBoolean(dataTable.Rows[0]["Ativo"]);
+                hospede.IdHospede      = (int)dt.Rows[0]["IdHospede"];
+                hospede.Nome           = dt.Rows[0]["Nome"].ToString();
+                hospede.CPF            = dt.Rows[0]["CPF"].ToString();
+                hospede.RG             = dt.Rows[0]["RG"].ToString();
+                hospede.Telefone       = dt.Rows[0]["Telefone"].ToString();
+                hospede.Email          = dt.Rows[0]["Email"].ToString();
+                hospede.DataNascimento = Convert.ToDateTime(dt.Rows[0]["DataNascimento"]);
+                hospede.Nacionalidade  = dt.Rows[0]["Nacionalidade"].ToString();
+                hospede.Ativo          = Convert.ToBoolean(dt.Rows[0]["Ativo"]);
                 return hospede;
             }
 
@@ -94,26 +94,27 @@ namespace ProjetoLucas.Controller
 
             sql += " ORDER BY Nome";
 
-            SqlCommand command = new SqlCommand(sql);
-            DataTable dataTable = _database.GetDataTable(command);
-            HospedeCollection hospedes = new HospedeCollection();
+            SqlCommand cmd = new SqlCommand(sql);
+            DataTable dt = banco.GetDataTable(cmd);
 
-            for (int i = 0; i < dataTable.Rows.Count; i++)
+            HospedeCollection lista = new HospedeCollection();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
                 Hospede hospede = new Hospede();
-                hospede.IdHospede = (int)dataTable.Rows[i]["IdHospede"];
-                hospede.Nome = dataTable.Rows[i]["Nome"].ToString();
-                hospede.CPF = dataTable.Rows[i]["CPF"].ToString();
-                hospede.RG = dataTable.Rows[i]["RG"].ToString();
-                hospede.Telefone = dataTable.Rows[i]["Telefone"].ToString();
-                hospede.Email = dataTable.Rows[i]["Email"].ToString();
-                hospede.DataNascimento = Convert.ToDateTime(dataTable.Rows[i]["DataNascimento"]);
-                hospede.Nacionalidade = dataTable.Rows[i]["Nacionalidade"].ToString();
-                hospede.Ativo = Convert.ToBoolean(dataTable.Rows[i]["Ativo"]);
-                hospedes.Add(hospede);
+                hospede.IdHospede      = (int)dt.Rows[i]["IdHospede"];
+                hospede.Nome           = dt.Rows[i]["Nome"].ToString();
+                hospede.CPF            = dt.Rows[i]["CPF"].ToString();
+                hospede.RG             = dt.Rows[i]["RG"].ToString();
+                hospede.Telefone       = dt.Rows[i]["Telefone"].ToString();
+                hospede.Email          = dt.Rows[i]["Email"].ToString();
+                hospede.DataNascimento = Convert.ToDateTime(dt.Rows[i]["DataNascimento"]);
+                hospede.Nacionalidade  = dt.Rows[i]["Nacionalidade"].ToString();
+                hospede.Ativo          = Convert.ToBoolean(dt.Rows[i]["Ativo"]);
+                lista.Add(hospede);
             }
 
-            return hospedes;
+            return lista;
         }
 
         public HospedeCollection GetAll()
@@ -121,31 +122,9 @@ namespace ProjetoLucas.Controller
             return GetByFilters();
         }
 
-        public HospedeCollection GetHospedes(string value)
+        public HospedeCollection GetHospedes(string valor)
         {
-            string sql = "SELECT * FROM tblHospede WHERE Nome LIKE @valor ORDER BY Nome";
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@valor", "%" + value + "%");
-
-            DataTable dataTable = _database.GetDataTable(command);
-            HospedeCollection hospedes = new HospedeCollection();
-
-            for (int i = 0; i < dataTable.Rows.Count; i++)
-            {
-                Hospede hospede = new Hospede();
-                hospede.IdHospede      = (int)dataTable.Rows[i]["IdHospede"];
-                hospede.Nome           = dataTable.Rows[i]["Nome"].ToString();
-                hospede.CPF            = dataTable.Rows[i]["CPF"].ToString();
-                hospede.RG             = dataTable.Rows[i]["RG"].ToString();
-                hospede.Telefone       = dataTable.Rows[i]["Telefone"].ToString();
-                hospede.Email          = dataTable.Rows[i]["Email"].ToString();
-                hospede.DataNascimento = Convert.ToDateTime(dataTable.Rows[i]["DataNascimento"]);
-                hospede.Nacionalidade  = dataTable.Rows[i]["Nacionalidade"].ToString();
-                hospede.Ativo          = Convert.ToBoolean(dataTable.Rows[i]["Ativo"]);
-                hospedes.Add(hospede);
-            }
-
-            return hospedes;
+            return GetByFilters("Nome LIKE '%" + valor + "%'");
         }
     }
 }

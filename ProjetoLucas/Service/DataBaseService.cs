@@ -5,32 +5,30 @@ namespace ProjetoLucas.Services
 {
     public class DataBaseService
     {
-        private const string connectionString =
-            "Data Source=.\\SQLEXPRESS;" +
-            "Initial Catalog=gs600hotelCalifornia;" +
-            "Integrated Security=SSPI;";
+        private SqlConnection GetConnection()
+        {
+            SqlConnection con = new SqlConnection();
+            con.ConnectionString =
+                "Data Source=.\\SQLEXPRESS;" +
+                "Initial Catalog=gs600hotelCalifornia;" +
+                "Integrated Security=SSPI;";
+            con.Open();
+            return con;
+        }
 
         public int ExecuteSql(SqlCommand command)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                command.Connection = conn;
-                conn.Open();
-                return command.ExecuteNonQuery();
-            }
+            command.Connection = GetConnection();
+            return command.ExecuteNonQuery();
         }
 
         public DataTable GetDataTable(SqlCommand command)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                command.Connection = conn;
-                conn.Open();
-                DataTable dataTable = new DataTable();
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dataTable);
-                return dataTable;
-            }
+            command.Connection = GetConnection();
+            DataTable dt = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(dt);
+            return dt;
         }
     }
 }

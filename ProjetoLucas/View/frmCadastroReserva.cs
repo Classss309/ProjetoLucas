@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Windows.Forms;
 using ProjetoLucas.Controller;
 using ProjetoLucas.Models;
@@ -9,10 +8,10 @@ namespace ProjetoLucas.View
 {
     public partial class frmCadastroReserva : Form
     {
-        private int _idReservaAtual = 0;
-        private ReservaController _reservaCtrl = new ReservaController();
-        private HospedeController _hospedeCtrl = new HospedeController();
-        private FilialController _filialCtrl = new FilialController();
+        int idAtual = 0;
+        ReservaController ctrl = new ReservaController();
+        HospedeController ctrlHosp = new HospedeController();
+        FilialController ctrlFilial = new FilialController();
 
         public frmCadastroReserva()
         {
@@ -28,123 +27,81 @@ namespace ProjetoLucas.View
 
         private void CarregarComboHospedes()
         {
-            try
+            HospedeCollection hospedes = ctrlHosp.GetAll();
+            List<object> itens = new List<object>();
+
+            foreach (Hospede h in hospedes)
             {
-                HospedeCollection hospedes = _hospedeCtrl.GetAll();
-                var itens = new List<object>();
-                foreach (Hospede h in hospedes)
-                {
-                    itens.Add(new { Text = h.Nome + " – " + h.CPF, Value = h.IdHospede });
-                }
-                cboHospede.DataSource = itens;
-                cboHospede.DisplayMember = "Text";
-                cboHospede.ValueMember = "Value";
-                if (itens.Count == 0)
-                    cboHospede.SelectedIndex = -1;
+                itens.Add(new { Text = h.Nome + " - " + h.CPF, Value = h.IdHospede });
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao carregar hóspedes: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
+            cboHospede.DataSource    = itens;
+            cboHospede.DisplayMember = "Text";
+            cboHospede.ValueMember   = "Value";
         }
 
         private void CarregarComboFiliais()
         {
-            try
+            FilialColletion filiais = ctrlFilial.GetAll();
+            List<object> itens = new List<object>();
+
+            foreach (Filial f in filiais)
             {
-                FilialColletion filiais = _filialCtrl.GetAll();
-                var itens = new List<object>();
-                foreach (Filial f in filiais)
-                {
-                    itens.Add(new { Text = f.RazaoSocial, Value = f.idFilial });
-                }
-                cboFilial.DataSource = itens;
-                cboFilial.DisplayMember = "Text";
-                cboFilial.ValueMember = "Value";
-                if (itens.Count == 0)
-                    cboFilial.SelectedIndex = -1;
+                itens.Add(new { Text = f.RazaoSocial, Value = f.idFilial });
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao carregar filiais: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
+            cboFilial.DataSource    = itens;
+            cboFilial.DisplayMember = "Text";
+            cboFilial.ValueMember   = "Value";
         }
 
         private void CarregarGrid()
         {
-            try
-            {
-                dgvReservas.DataSource = _reservaCtrl.GetDataTableAll();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao carregar reservas: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            dgvReservas.DataSource = ctrl.GetDataTableAll();
         }
 
         private void LimparCampos()
         {
-            _idReservaAtual = 0;
+            idAtual = 0;
             if (cboHospede.Items.Count > 0) cboHospede.SelectedIndex = 0;
             if (cboFilial.Items.Count > 0) cboFilial.SelectedIndex = 0;
             nudNumeroQuarto.Value = 1;
             if (cboTipoQuarto.Items.Count > 0) cboTipoQuarto.SelectedIndex = 0;
             dtpCheckin.Value = DateTime.Today;
             dtpCheckout.Value = DateTime.Today.AddDays(1);
-            txtValorDiaria.Text = string.Empty;
-            txtObservacoes.Text = string.Empty;
+            txtValorDiaria.Text = "";
+            txtObservacoes.Text = "";
             if (cboStatus.Items.Count > 0) cboStatus.SelectedIndex = 0;
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (cboHospede.SelectedValue == null || cboFilial.SelectedValue == null)
+            if (txtValorDiaria.Text == "")
             {
-                MessageBox.Show("Selecione o hóspede e a filial.", "Validação",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Informe o valor da diária.");
                 return;
             }
 
-            decimal valorDiaria;
-            if (!decimal.TryParse(txtValorDiaria.Text.Trim(), out valorDiaria))
-            {
-                MessageBox.Show("Valor da diária inválido.", "Validação",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            Reserva r = new Reserva();
+            r.IdReserva    = idAtual;
+            r.IdHospede    = Convert.ToInt32(cboHospede.SelectedValue);
+            r.IdFilial     = Convert.ToInt32(cboFilial.SelectedValue);
+            r.NumeroQuarto = (int)nudNumeroQuarto.Value;
+            r.TipoQuarto   = cboTipoQuarto.SelectedItem.ToString();
+            r.DataCheckin  = dtpCheckin.Value;
+            r.DataCheckout = dtpCheckout.Value;
+            r.ValorDiaria  = Convert.ToDecimal(txtValorDiaria.Text);
+            r.Observacoes  = txtObservacoes.Text;
+            r.Status       = cboStatus.SelectedItem.ToString();
 
-            try
-            {
-                Reserva reserva = new Reserva();
-                reserva.IdReserva = _idReservaAtual;
-                reserva.IdHospede = Convert.ToInt32(cboHospede.SelectedValue);
-                reserva.IdFilial = Convert.ToInt32(cboFilial.SelectedValue);
-                reserva.NumeroQuarto = (int)nudNumeroQuarto.Value;
-                reserva.TipoQuarto = cboTipoQuarto.SelectedItem?.ToString() ?? string.Empty;
-                reserva.DataCheckin = dtpCheckin.Value;
-                reserva.DataCheckout = dtpCheckout.Value;
-                reserva.ValorDiaria = valorDiaria;
-                reserva.Observacoes = txtObservacoes.Text.Trim();
-                reserva.Status = cboStatus.SelectedItem?.ToString() ?? "Ativa";
+            if (idAtual == 0)
+                ctrl.Inserir(r);
+            else
+                ctrl.Alterar(r);
 
-                if (_idReservaAtual == 0)
-                    _reservaCtrl.Inserir(reserva);
-                else
-                    _reservaCtrl.Alterar(reserva);
-
-                MessageBox.Show("Reserva salva com sucesso!", "Sucesso",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LimparCampos();
-                CarregarGrid();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao salvar reserva: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            MessageBox.Show("Salvo com sucesso!");
+            LimparCampos();
+            CarregarGrid();
         }
 
         private void btnNovo_Click(object sender, EventArgs e)
@@ -154,78 +111,48 @@ namespace ProjetoLucas.View
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
-            if (_idReservaAtual == 0)
+            if (idAtual == 0)
             {
-                MessageBox.Show("Selecione uma reserva para excluir.", "Aviso",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione uma reserva para excluir.");
                 return;
             }
 
-            DialogResult result = MessageBox.Show(
-                "Deseja realmente excluir esta reserva?", "Confirmação",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
+            if (MessageBox.Show("Deseja excluir?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                try
-                {
-                    _reservaCtrl.Excluir(_idReservaAtual);
-                    MessageBox.Show("Reserva excluída com sucesso!", "Sucesso",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LimparCampos();
-                    CarregarGrid();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao excluir reserva: " + ex.Message, "Erro",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                ctrl.Excluir(idAtual);
+                MessageBox.Show("Excluído com sucesso!");
+                LimparCampos();
+                CarregarGrid();
             }
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(txtBusca.Text))
-                    CarregarGrid();
-                else
-                    dgvReservas.DataSource = _reservaCtrl.GetReservas(txtBusca.Text);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao buscar reservas: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            if (txtBusca.Text == "")
+                CarregarGrid();
+            else
+                dgvReservas.DataSource = ctrl.GetReservas(txtBusca.Text);
         }
 
         private void dgvReservas_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            try
-            {
-                DataGridViewRow row = dgvReservas.Rows[e.RowIndex];
-                _idReservaAtual = Convert.ToInt32(row.Cells["IdReserva"].Value);
+            DataGridViewRow row = dgvReservas.Rows[e.RowIndex];
+            idAtual = Convert.ToInt32(row.Cells["IdReserva"].Value);
 
-                Reserva reserva = _reservaCtrl.GetById(_idReservaAtual);
-                if (reserva == null) return;
+            Reserva r = ctrl.GetById(idAtual);
+            if (r == null) return;
 
-                try { cboHospede.SelectedValue = reserva.IdHospede; } catch { }
-                try { cboFilial.SelectedValue = reserva.IdFilial; } catch { }
-                nudNumeroQuarto.Value = reserva.NumeroQuarto;
-                cboTipoQuarto.SelectedItem = reserva.TipoQuarto;
-                dtpCheckin.Value = reserva.DataCheckin;
-                dtpCheckout.Value = reserva.DataCheckout;
-                txtValorDiaria.Text = reserva.ValorDiaria.ToString("F2");
-                txtObservacoes.Text = reserva.Observacoes;
-                cboStatus.SelectedItem = reserva.Status;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao selecionar reserva: " + ex.Message, "Erro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            cboHospede.SelectedValue  = r.IdHospede;
+            cboFilial.SelectedValue   = r.IdFilial;
+            nudNumeroQuarto.Value     = r.NumeroQuarto;
+            cboTipoQuarto.SelectedItem = r.TipoQuarto;
+            dtpCheckin.Value          = r.DataCheckin;
+            dtpCheckout.Value         = r.DataCheckout;
+            txtValorDiaria.Text       = r.ValorDiaria.ToString();
+            txtObservacoes.Text       = r.Observacoes;
+            cboStatus.SelectedItem    = r.Status;
         }
     }
 }

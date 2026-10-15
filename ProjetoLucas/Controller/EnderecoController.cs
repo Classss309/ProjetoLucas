@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Data.SqlClient;
 using ProjetoLucas.Models;
@@ -8,23 +7,23 @@ namespace ProjetoLucas.Controller
 {
     public class EnderecoController
     {
-        private DataBaseService _database = new DataBaseService();
+        DataBaseService banco = new DataBaseService();
 
         public int Inserir(Endereco endereco)
         {
             string sql = "INSERT INTO tblEndereco (Logradouro, Numero, Complemento, Bairro, Cidade, Estado, CEP) " +
                          "VALUES (@Logradouro, @Numero, @Complemento, @Bairro, @Cidade, @Estado, @CEP)";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@Logradouro", endereco.Logradouro);
-            command.Parameters.AddWithValue("@Numero", endereco.Numero);
-            command.Parameters.AddWithValue("@Complemento", endereco.Complemento ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@Bairro", endereco.Bairro);
-            command.Parameters.AddWithValue("@Cidade", endereco.Cidade);
-            command.Parameters.AddWithValue("@Estado", endereco.Estado);
-            command.Parameters.AddWithValue("@CEP", endereco.CEP);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@Logradouro", endereco.Logradouro);
+            cmd.Parameters.AddWithValue("@Numero", endereco.Numero);
+            cmd.Parameters.AddWithValue("@Complemento", endereco.Complemento);
+            cmd.Parameters.AddWithValue("@Bairro", endereco.Bairro);
+            cmd.Parameters.AddWithValue("@Cidade", endereco.Cidade);
+            cmd.Parameters.AddWithValue("@Estado", endereco.Estado);
+            cmd.Parameters.AddWithValue("@CEP", endereco.CEP);
 
-            return _database.ExecuteSql(command);
+            return banco.ExecuteSql(cmd);
         }
 
         public int Alterar(Endereco endereco)
@@ -33,49 +32,49 @@ namespace ProjetoLucas.Controller
                          "Complemento = @Complemento, Bairro = @Bairro, Cidade = @Cidade, " +
                          "Estado = @Estado, CEP = @CEP WHERE IdEndereco = @IdEndereco";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@IdEndereco", endereco.IdEndereco);
-            command.Parameters.AddWithValue("@Logradouro", endereco.Logradouro);
-            command.Parameters.AddWithValue("@Numero", endereco.Numero);
-            command.Parameters.AddWithValue("@Complemento", endereco.Complemento ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@Bairro", endereco.Bairro);
-            command.Parameters.AddWithValue("@Cidade", endereco.Cidade);
-            command.Parameters.AddWithValue("@Estado", endereco.Estado);
-            command.Parameters.AddWithValue("@CEP", endereco.CEP);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@IdEndereco", endereco.IdEndereco);
+            cmd.Parameters.AddWithValue("@Logradouro", endereco.Logradouro);
+            cmd.Parameters.AddWithValue("@Numero", endereco.Numero);
+            cmd.Parameters.AddWithValue("@Complemento", endereco.Complemento);
+            cmd.Parameters.AddWithValue("@Bairro", endereco.Bairro);
+            cmd.Parameters.AddWithValue("@Cidade", endereco.Cidade);
+            cmd.Parameters.AddWithValue("@Estado", endereco.Estado);
+            cmd.Parameters.AddWithValue("@CEP", endereco.CEP);
 
-            return _database.ExecuteSql(command);
+            return banco.ExecuteSql(cmd);
         }
 
         public int Excluir(int idEndereco)
         {
             string sql = "DELETE FROM tblEndereco WHERE IdEndereco = @IdEndereco";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@IdEndereco", idEndereco);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@IdEndereco", idEndereco);
 
-            return _database.ExecuteSql(command);
+            return banco.ExecuteSql(cmd);
         }
 
         public Endereco GetById(int idEndereco)
         {
             string sql = "SELECT * FROM tblEndereco WHERE IdEndereco = @IdEndereco";
 
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@IdEndereco", idEndereco);
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@IdEndereco", idEndereco);
 
-            DataTable dataTable = _database.GetDataTable(command);
+            DataTable dt = banco.GetDataTable(cmd);
 
-            if (dataTable.Rows.Count > 0)
+            if (dt.Rows.Count > 0)
             {
                 Endereco endereco = new Endereco();
-                endereco.IdEndereco = (int)dataTable.Rows[0]["IdEndereco"];
-                endereco.Logradouro = dataTable.Rows[0]["Logradouro"].ToString();
-                endereco.Numero = dataTable.Rows[0]["Numero"].ToString();
-                endereco.Complemento = dataTable.Rows[0]["Complemento"].ToString();
-                endereco.Bairro = dataTable.Rows[0]["Bairro"].ToString();
-                endereco.Cidade = dataTable.Rows[0]["Cidade"].ToString();
-                endereco.Estado = dataTable.Rows[0]["Estado"].ToString();
-                endereco.CEP = dataTable.Rows[0]["CEP"].ToString();
+                endereco.IdEndereco  = (int)dt.Rows[0]["IdEndereco"];
+                endereco.Logradouro  = dt.Rows[0]["Logradouro"].ToString();
+                endereco.Numero      = dt.Rows[0]["Numero"].ToString();
+                endereco.Complemento = dt.Rows[0]["Complemento"].ToString();
+                endereco.Bairro      = dt.Rows[0]["Bairro"].ToString();
+                endereco.Cidade      = dt.Rows[0]["Cidade"].ToString();
+                endereco.Estado      = dt.Rows[0]["Estado"].ToString();
+                endereco.CEP         = dt.Rows[0]["CEP"].ToString();
                 return endereco;
             }
 
@@ -91,25 +90,26 @@ namespace ProjetoLucas.Controller
 
             sql += " ORDER BY Logradouro";
 
-            SqlCommand command = new SqlCommand(sql);
-            DataTable dataTable = _database.GetDataTable(command);
-            EnderecoCollection enderecos = new EnderecoCollection();
+            SqlCommand cmd = new SqlCommand(sql);
+            DataTable dt = banco.GetDataTable(cmd);
 
-            for (int i = 0; i < dataTable.Rows.Count; i++)
+            EnderecoCollection lista = new EnderecoCollection();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
                 Endereco endereco = new Endereco();
-                endereco.IdEndereco = (int)dataTable.Rows[i]["IdEndereco"];
-                endereco.Logradouro = dataTable.Rows[i]["Logradouro"].ToString();
-                endereco.Numero = dataTable.Rows[i]["Numero"].ToString();
-                endereco.Complemento = dataTable.Rows[i]["Complemento"].ToString();
-                endereco.Bairro = dataTable.Rows[i]["Bairro"].ToString();
-                endereco.Cidade = dataTable.Rows[i]["Cidade"].ToString();
-                endereco.Estado = dataTable.Rows[i]["Estado"].ToString();
-                endereco.CEP = dataTable.Rows[i]["CEP"].ToString();
-                enderecos.Add(endereco);
+                endereco.IdEndereco  = (int)dt.Rows[i]["IdEndereco"];
+                endereco.Logradouro  = dt.Rows[i]["Logradouro"].ToString();
+                endereco.Numero      = dt.Rows[i]["Numero"].ToString();
+                endereco.Complemento = dt.Rows[i]["Complemento"].ToString();
+                endereco.Bairro      = dt.Rows[i]["Bairro"].ToString();
+                endereco.Cidade      = dt.Rows[i]["Cidade"].ToString();
+                endereco.Estado      = dt.Rows[i]["Estado"].ToString();
+                endereco.CEP         = dt.Rows[i]["CEP"].ToString();
+                lista.Add(endereco);
             }
 
-            return enderecos;
+            return lista;
         }
 
         public EnderecoCollection GetAll()
@@ -117,30 +117,9 @@ namespace ProjetoLucas.Controller
             return GetByFilters();
         }
 
-        public EnderecoCollection GetEnderecos(string value)
+        public EnderecoCollection GetEnderecos(string valor)
         {
-            string sql = "SELECT * FROM tblEndereco WHERE Logradouro LIKE @valor ORDER BY Logradouro";
-            SqlCommand command = new SqlCommand(sql);
-            command.Parameters.AddWithValue("@valor", "%" + value + "%");
-
-            DataTable dataTable = _database.GetDataTable(command);
-            EnderecoCollection enderecos = new EnderecoCollection();
-
-            for (int i = 0; i < dataTable.Rows.Count; i++)
-            {
-                Endereco endereco = new Endereco();
-                endereco.IdEndereco  = (int)dataTable.Rows[i]["IdEndereco"];
-                endereco.Logradouro  = dataTable.Rows[i]["Logradouro"].ToString();
-                endereco.Numero      = dataTable.Rows[i]["Numero"].ToString();
-                endereco.Complemento = dataTable.Rows[i]["Complemento"].ToString();
-                endereco.Bairro      = dataTable.Rows[i]["Bairro"].ToString();
-                endereco.Cidade      = dataTable.Rows[i]["Cidade"].ToString();
-                endereco.Estado      = dataTable.Rows[i]["Estado"].ToString();
-                endereco.CEP         = dataTable.Rows[i]["CEP"].ToString();
-                enderecos.Add(endereco);
-            }
-
-            return enderecos;
+            return GetByFilters("Logradouro LIKE '%" + valor + "%'");
         }
     }
 }
