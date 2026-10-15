@@ -135,7 +135,34 @@ namespace ProjetoLucas.Controller
 
         public ReservaCollection GetReservas(string value)
         {
-            return GetByFilters("r.Status LIKE '%" + value + "%'");
+            string sql = "SELECT r.*, h.Nome AS NomeHospede, f.RazaoSocial " +
+                         "FROM tblReserva r " +
+                         "INNER JOIN tblHospede h ON r.IdHospede = h.IdHospede " +
+                         "INNER JOIN tblHotel f ON r.IdFilial = f.IdFilial " +
+                         "WHERE r.Status LIKE @valor ORDER BY r.IdReserva";
+            SqlCommand command = new SqlCommand(sql);
+            command.Parameters.AddWithValue("@valor", "%" + value + "%");
+
+            DataTable dataTable = _database.GetDataTable(command);
+            ReservaCollection reservas = new ReservaCollection();
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                Reserva reserva = new Reserva();
+                reserva.IdReserva    = (int)dataTable.Rows[i]["IdReserva"];
+                reserva.IdHospede    = (int)dataTable.Rows[i]["IdHospede"];
+                reserva.IdFilial     = (int)dataTable.Rows[i]["IdFilial"];
+                reserva.NumeroQuarto = (int)dataTable.Rows[i]["NumeroQuarto"];
+                reserva.TipoQuarto   = dataTable.Rows[i]["TipoQuarto"].ToString();
+                reserva.DataCheckin  = Convert.ToDateTime(dataTable.Rows[i]["DataCheckin"]);
+                reserva.DataCheckout = Convert.ToDateTime(dataTable.Rows[i]["DataCheckout"]);
+                reserva.ValorDiaria  = (decimal)dataTable.Rows[i]["ValorDiaria"];
+                reserva.Observacoes  = dataTable.Rows[i]["Observacoes"].ToString();
+                reserva.Status       = dataTable.Rows[i]["Status"].ToString();
+                reservas.Add(reserva);
+            }
+
+            return reservas;
         }
 
         public DataTable GetDataTableAll()

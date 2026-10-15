@@ -119,7 +119,28 @@ namespace ProjetoLucas.Controller
 
         public EnderecoCollection GetEnderecos(string value)
         {
-            return GetByFilters("Logradouro LIKE '%" + value + "%'");
+            string sql = "SELECT * FROM tblEndereco WHERE Logradouro LIKE @valor ORDER BY Logradouro";
+            SqlCommand command = new SqlCommand(sql);
+            command.Parameters.AddWithValue("@valor", "%" + value + "%");
+
+            DataTable dataTable = _database.GetDataTable(command);
+            EnderecoCollection enderecos = new EnderecoCollection();
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                Endereco endereco = new Endereco();
+                endereco.IdEndereco  = (int)dataTable.Rows[i]["IdEndereco"];
+                endereco.Logradouro  = dataTable.Rows[i]["Logradouro"].ToString();
+                endereco.Numero      = dataTable.Rows[i]["Numero"].ToString();
+                endereco.Complemento = dataTable.Rows[i]["Complemento"].ToString();
+                endereco.Bairro      = dataTable.Rows[i]["Bairro"].ToString();
+                endereco.Cidade      = dataTable.Rows[i]["Cidade"].ToString();
+                endereco.Estado      = dataTable.Rows[i]["Estado"].ToString();
+                endereco.CEP         = dataTable.Rows[i]["CEP"].ToString();
+                enderecos.Add(endereco);
+            }
+
+            return enderecos;
         }
     }
 }

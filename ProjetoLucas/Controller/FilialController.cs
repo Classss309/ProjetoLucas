@@ -119,7 +119,28 @@ namespace ProjetoLucas.Controller
 
         public FilialColletion GetFilials(string value)
         {
-            return GetByFilters("RazaoSocial LIKE '%" + value + "%'");
+            string sql = "SELECT * FROM tblHotel WHERE RazaoSocial LIKE @valor ORDER BY IdFilial";
+            SqlCommand command = new SqlCommand(sql);
+            command.Parameters.AddWithValue("@valor", "%" + value + "%");
+
+            DataTable dataTable = _database.GetDataTable(command);
+            FilialColletion filiais = new FilialColletion();
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                Filial filial = new Filial();
+                filial.idFilial    = (int)dataTable.Rows[i]["IdFilial"];
+                filial.RazaoSocial = dataTable.Rows[i]["RazaoSocial"].ToString();
+                filial.CNPJ        = dataTable.Rows[i]["CNPJ"].ToString();
+                filial.Telefone    = dataTable.Rows[i]["Telefone"].ToString();
+                filial.Email       = dataTable.Rows[i]["Email"].ToString();
+                filial.Avaliacao   = (decimal)dataTable.Rows[i]["Avaliacao"];
+                filial.IdEndereco  = dataTable.Rows[i]["IdEndereco"] == DBNull.Value ? 0 : (int)dataTable.Rows[i]["IdEndereco"];
+                filial.Ativo       = Convert.ToBoolean(dataTable.Rows[i]["Ativo"]);
+                filiais.Add(filial);
+            }
+
+            return filiais;
         }
     }
 }

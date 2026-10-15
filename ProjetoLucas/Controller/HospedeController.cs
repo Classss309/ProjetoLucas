@@ -123,7 +123,29 @@ namespace ProjetoLucas.Controller
 
         public HospedeCollection GetHospedes(string value)
         {
-            return GetByFilters("Nome LIKE '%" + value + "%'");
+            string sql = "SELECT * FROM tblHospede WHERE Nome LIKE @valor ORDER BY Nome";
+            SqlCommand command = new SqlCommand(sql);
+            command.Parameters.AddWithValue("@valor", "%" + value + "%");
+
+            DataTable dataTable = _database.GetDataTable(command);
+            HospedeCollection hospedes = new HospedeCollection();
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                Hospede hospede = new Hospede();
+                hospede.IdHospede      = (int)dataTable.Rows[i]["IdHospede"];
+                hospede.Nome           = dataTable.Rows[i]["Nome"].ToString();
+                hospede.CPF            = dataTable.Rows[i]["CPF"].ToString();
+                hospede.RG             = dataTable.Rows[i]["RG"].ToString();
+                hospede.Telefone       = dataTable.Rows[i]["Telefone"].ToString();
+                hospede.Email          = dataTable.Rows[i]["Email"].ToString();
+                hospede.DataNascimento = Convert.ToDateTime(dataTable.Rows[i]["DataNascimento"]);
+                hospede.Nacionalidade  = dataTable.Rows[i]["Nacionalidade"].ToString();
+                hospede.Ativo          = Convert.ToBoolean(dataTable.Rows[i]["Ativo"]);
+                hospedes.Add(hospede);
+            }
+
+            return hospedes;
         }
     }
 }
