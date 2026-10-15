@@ -85,7 +85,7 @@ namespace ProjetoLucas.View
             {
                 int resultado = ctrl.Excluir(idAtual);
 
-                if (resultado < 0)
+                if (resultado > 0)
                 {
                     MessageBox.Show("Cadastro de Hospede excluído com sucesso!");
                     LimparCampos();
