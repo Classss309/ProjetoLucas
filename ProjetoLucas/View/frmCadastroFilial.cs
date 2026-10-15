@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using ProjetoLucas.Controller;
+﻿using ProjetoLucas.Controller;
 using ProjetoLucas.Models;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace ProjetoLucas.View
 {
@@ -96,13 +97,30 @@ namespace ProjetoLucas.View
                 return;
             }
 
-            if (MessageBox.Show("Deseja excluir?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(
+                "Deseja excluir?",
+                "Confirmar",
+                MessageBoxButtons.YesNo) != DialogResult.Yes)
+            try
             {
-                ctrl.Excluir(idAtual);
-                MessageBox.Show("Excluído com sucesso!");
-                LimparCampos();
-                CarregarGrid();
+                int resultado = ctrl.Excluir(idAtual);
+
+                if (resultado > 0)
+                {
+                    MessageBox.Show("Filial excluída com sucesso!");
+                    LimparCampos();
+                    CarregarGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Não foi possível excluir a filial.");
+                }
             }
+            catch (SqlException ex) 
+            {
+                MessageBox.Show($"Ocorreu um erro ao excluir a filial. {ex.Message}", "Falha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)

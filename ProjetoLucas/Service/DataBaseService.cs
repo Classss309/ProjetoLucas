@@ -9,7 +9,7 @@ namespace ProjetoLucas.Services
         {
             SqlConnection con = new SqlConnection();
             con.ConnectionString =
-                "Data Source=.\\SQLEXPRESS;" +
+                "Data Source=LOCALHOST;" +
                 "Initial Catalog=gs600hotelCalifornia;" +
                 "Integrated Security=SSPI;";
             con.Open();

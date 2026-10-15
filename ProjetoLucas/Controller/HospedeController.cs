@@ -54,7 +54,6 @@ namespace ProjetoLucas.Controller
 
             SqlCommand cmd = new SqlCommand(sql);
             cmd.Parameters.AddWithValue("@IdHospede", idHospede);
-
             return banco.ExecuteSql(cmd);
         }
 

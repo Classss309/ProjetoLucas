@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
+using System.Windows.Forms;
 using ProjetoLucas.Models;
 using ProjetoLucas.Services;
 
@@ -52,8 +54,8 @@ namespace ProjetoLucas.Controller
 
             SqlCommand cmd = new SqlCommand(sql);
             cmd.Parameters.AddWithValue("@IdFilial", idFilial);
-
             return banco.ExecuteSql(cmd);
+
         }
 
         public Filial GetById(int idFilial)
