@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ProjetoLucas.Models
 {
@@ -14,13 +8,11 @@ namespace ProjetoLucas.Models
         public string RazaoSocial { get; set; }
         public string CNPJ { get; set; }
         public string Telefone { get; set; }
-        public string Email { get; set;}
+        public string Email { get; set; }
         public decimal Avaliacao { get; set; }
-
         public int IdEndereco { get; set; }
-        public int Ativo { get; set; }
-
+        public bool Ativo { get; set; }
     }
-    public class FilialColletion : List<Filial> { }
 
+    public class FilialColletion : List<Filial> { }
 }

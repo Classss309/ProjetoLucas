@@ -1,30 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
 using ProjetoLucas.Models;
 using ProjetoLucas.Services;
-using System.Data.SqlClient;
-using System.Data;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ProjetoLucas.Controller
 {
     public class FilialController
     {
-        DataBaseService _database = new DataBaseService();
+        private DataBaseService _database = new DataBaseService();
 
         public int Inserir(Filial filial)
         {
+            string sql = "INSERT INTO tblHotel (RazaoSocial, CNPJ, Telefone, Email, Avaliacao, IdEndereco, Ativo) " +
+                         "VALUES (@RazaoSocial, @CNPJ, @Telefone, @Email, @Avaliacao, @IdEndereco, @Ativo)";
 
-            string Inserir = "INSERT INTO tblHotel (RazaoSocial, CNPJ, Telefone, Email, Avalicao, Ativo)" +
-                "VALUES (@RazaoSocial , @CNPJ, @Telefone , @Email, @Avalicao, Ativo";
-
-            SqlCommand command = new SqlCommand(Inserir);
-
-            
+            SqlCommand command = new SqlCommand(sql);
             command.Parameters.AddWithValue("@RazaoSocial", filial.RazaoSocial);
             command.Parameters.AddWithValue("@CNPJ", filial.CNPJ);
             command.Parameters.AddWithValue("@Telefone", filial.Telefone);
@@ -38,12 +29,11 @@ namespace ProjetoLucas.Controller
 
         public int Alterar(Filial filial)
         {
-            string Alterar = "UPDATE tblHotel SET " +
-                "RazaoSocial = @RazaoSocial, CNPJ = @CNPJ, Telefone = @Telefone , Email = @Email, Avaliacao = @Avalicao, IdEndereco = @IdEndereco, Ativo = @Ativo" +
-                "WHERE IdFilial = @idFilial";
+            string sql = "UPDATE tblHotel SET RazaoSocial = @RazaoSocial, CNPJ = @CNPJ, Telefone = @Telefone, " +
+                         "Email = @Email, Avaliacao = @Avaliacao, IdEndereco = @IdEndereco, Ativo = @Ativo " +
+                         "WHERE IdFilial = @idFilial";
 
-            SqlCommand command = new SqlCommand(Alterar);
-
+            SqlCommand command = new SqlCommand(sql);
             command.Parameters.AddWithValue("@idFilial", filial.idFilial);
             command.Parameters.AddWithValue("@RazaoSocial", filial.RazaoSocial);
             command.Parameters.AddWithValue("@CNPJ", filial.CNPJ);
@@ -58,82 +48,65 @@ namespace ProjetoLucas.Controller
 
         public int Excluir(int idFilial)
         {
+            string sql = "DELETE FROM tblHotel WHERE IdFilial = @idFilial";
 
-            string exclusao = "DELETE FROM tblHotel" +
-                              "WHERE IdFilial = @idFilial";
-
-            SqlCommand command = new SqlCommand(exclusao);
-
-            command.Parameters.AddWithValue("@IdFilial", idFilial);
+            SqlCommand command = new SqlCommand(sql);
+            command.Parameters.AddWithValue("@idFilial", idFilial);
 
             return _database.ExecuteSql(command);
         }
 
         public Filial GetById(int idFilial)
         {
-            string consulta = "SELECT * FROM tblHotel" +
-                "WHERE IdFilial = @idFilial";
+            string sql = "SELECT * FROM tblHotel WHERE IdFilial = @idFilial";
 
-            SqlCommand command = new SqlCommand(consulta);
-
-            command.Parameters.AddWithValue("@IdFilial", idFilial);
+            SqlCommand command = new SqlCommand(sql);
+            command.Parameters.AddWithValue("@idFilial", idFilial);
 
             DataTable dataTable = _database.GetDataTable(command);
 
             if (dataTable.Rows.Count > 0)
             {
                 Filial filial = new Filial();
-
-                filial.idFilial = (int)dataTable.Rows[0]["idFilial"];
-                filial.RazaoSocial = (string)dataTable.Rows[0]["RazaoSocial"];
-                filial.CNPJ = (string)dataTable.Rows[0]["CNPJ"];
-                filial.Telefone = (string)dataTable.Rows[0]["Telefone"];
-                filial.Email = (string)dataTable.Rows[0]["Email"];
+                filial.idFilial = (int)dataTable.Rows[0]["IdFilial"];
+                filial.RazaoSocial = dataTable.Rows[0]["RazaoSocial"].ToString();
+                filial.CNPJ = dataTable.Rows[0]["CNPJ"].ToString();
+                filial.Telefone = dataTable.Rows[0]["Telefone"].ToString();
+                filial.Email = dataTable.Rows[0]["Email"].ToString();
                 filial.Avaliacao = (decimal)dataTable.Rows[0]["Avaliacao"];
-                filial.IdEndereco = (int)dataTable.Rows[0]["IdEndereco"];
-                filial.Ativo = (int)dataTable.Rows[0]["Ativo"];
-
+                filial.IdEndereco = dataTable.Rows[0]["IdEndereco"] == DBNull.Value ? 0 : (int)dataTable.Rows[0]["IdEndereco"];
+                filial.Ativo = Convert.ToBoolean(dataTable.Rows[0]["Ativo"]);
                 return filial;
             }
-            else
-                return null;
+
+            return null;
         }
 
-        private FilialColletion
-            GetByFilters(string filtros = "")
+        private FilialColletion GetByFilters(string filtros = "")
         {
-
-            string filtro = "SELECT * FROM tblHotel";
+            string sql = "SELECT * FROM tblHotel";
 
             if (filtros != "")
-                filtros += "WHERE @filtros";
+                sql += " WHERE " + filtros;
 
-            filtros += "ORDER BY idFilial";
+            sql += " ORDER BY IdFilial";
 
-            SqlCommand command = new SqlCommand(filtros);
-
-            command.Parameters.AddWithValue("@filtros", filtro);
-
+            SqlCommand command = new SqlCommand(sql);
             DataTable dataTable = _database.GetDataTable(command);
-
             FilialColletion filiais = new FilialColletion();
 
             for (int i = 0; i < dataTable.Rows.Count; i++)
             {
-
                 Filial filial = new Filial();
-
-                filial.idFilial = (int)dataTable.Rows[0]["idFilial"];
-                filial.RazaoSocial = (string)dataTable.Rows[0]["RazaoSocial"];
-                filial.CNPJ = (string)dataTable.Rows[0]["CNPJ"];
-                filial.Telefone = (string)dataTable.Rows[0]["Telefone"];
-                filial.Email = (string)dataTable.Rows[0]["Email"];
-                filial.Avaliacao = (decimal)dataTable.Rows[0]["Avaliacao"];
-                filial.IdEndereco = (int)dataTable.Rows[0]["IdEndereco"];
-                filial.Ativo = (int)dataTable.Rows[0]["Ativo"];
-
+                filial.idFilial = (int)dataTable.Rows[i]["IdFilial"];
+                filial.RazaoSocial = dataTable.Rows[i]["RazaoSocial"].ToString();
+                filial.CNPJ = dataTable.Rows[i]["CNPJ"].ToString();
+                filial.Telefone = dataTable.Rows[i]["Telefone"].ToString();
+                filial.Email = dataTable.Rows[i]["Email"].ToString();
+                filial.Avaliacao = (decimal)dataTable.Rows[i]["Avaliacao"];
+                filial.IdEndereco = dataTable.Rows[i]["IdEndereco"] == DBNull.Value ? 0 : (int)dataTable.Rows[i]["IdEndereco"];
+                filial.Ativo = Convert.ToBoolean(dataTable.Rows[i]["Ativo"]);
                 filiais.Add(filial);
-
             }
 
             return filiais;
@@ -141,16 +114,12 @@ namespace ProjetoLucas.Controller
 
         public FilialColletion GetAll()
         {
-
             return GetByFilters();
-
         }
 
         public FilialColletion GetFilials(string value)
         {
-
             return GetByFilters("RazaoSocial LIKE '%" + value + "%'");
-
         }
     }
 }

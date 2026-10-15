@@ -46,8 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\EnderecoController.cs" />
     <Compile Include="Controller\FilialController.cs" />
+    <Compile Include="Controller\HospedeController.cs" />
+    <Compile Include="Controller\ReservaController.cs" />
+    <Compile Include="Models\Endereco.cs" />
     <Compile Include="Models\Filial.cs" />
+    <Compile Include="Models\Hospede.cs" />
+    <Compile Include="Models\Reserva.cs" />
     <Compile Include="Service\DataBaseService.cs" />
     <Compile Include="View\frmCadastroEndereco.cs">
       <SubType>Form</SubType>

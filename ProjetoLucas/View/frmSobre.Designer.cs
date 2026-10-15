@@ -2,129 +2,155 @@
 {
     partial class frmSobre
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSobre));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
+            this.pnlInfo = new System.Windows.Forms.Panel();
+            this.lblNome = new System.Windows.Forms.Label();
+            this.lblDescricao = new System.Windows.Forms.Label();
+            this.lblVersao = new System.Windows.Forms.Label();
+            this.lblEquipe = new System.Windows.Forms.Label();
+            this.lblMembros = new System.Windows.Forms.Label();
+            this.lblCopyright = new System.Windows.Forms.Label();
+            this.btnFechar = new System.Windows.Forms.Button();
+            this.pnlInfo.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // pnlInfo
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(43, 33);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(421, 248);
-            this.panel1.TabIndex = 0;
+            this.pnlInfo.BackColor = System.Drawing.Color.FromArgb(45, 45, 65);
+            this.pnlInfo.Controls.Add(this.lblNome);
+            this.pnlInfo.Controls.Add(this.lblDescricao);
+            this.pnlInfo.Controls.Add(this.lblVersao);
+            this.pnlInfo.Controls.Add(this.lblEquipe);
+            this.pnlInfo.Controls.Add(this.lblMembros);
+            this.pnlInfo.Controls.Add(this.lblCopyright);
+            this.pnlInfo.Location = new System.Drawing.Point(50, 40);
+            this.pnlInfo.Name = "pnlInfo";
+            this.pnlInfo.Size = new System.Drawing.Size(400, 220);
+            this.pnlInfo.TabIndex = 0;
             // 
-            // label1
+            // lblNome
             // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(3, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Nome do programa: Hotelis";
+            this.lblNome.AutoSize = false;
+            this.lblNome.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblNome.ForeColor = System.Drawing.Color.White;
+            this.lblNome.Location = new System.Drawing.Point(0, 15);
+            this.lblNome.Name = "lblNome";
+            this.lblNome.Size = new System.Drawing.Size(400, 28);
+            this.lblNome.TabIndex = 0;
+            this.lblNome.Text = "Hotel California";
+            this.lblNome.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label2
+            // lblDescricao
             // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(3, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Versão: 1.0.0.0";
+            this.lblDescricao.AutoSize = false;
+            this.lblDescricao.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic);
+            this.lblDescricao.ForeColor = System.Drawing.Color.White;
+            this.lblDescricao.Location = new System.Drawing.Point(0, 50);
+            this.lblDescricao.Name = "lblDescricao";
+            this.lblDescricao.Size = new System.Drawing.Size(400, 22);
+            this.lblDescricao.TabIndex = 1;
+            this.lblDescricao.Text = "Sistema de Gestão Hoteleira";
+            this.lblDescricao.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label3
+            // lblVersao
             // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label3.Location = new System.Drawing.Point(3, 65);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(273, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Descrição: Aplicativo para gerenciar seu hotel completo.";
+            this.lblVersao.AutoSize = false;
+            this.lblVersao.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblVersao.ForeColor = System.Drawing.Color.White;
+            this.lblVersao.Location = new System.Drawing.Point(0, 80);
+            this.lblVersao.Name = "lblVersao";
+            this.lblVersao.Size = new System.Drawing.Size(400, 20);
+            this.lblVersao.TabIndex = 2;
+            this.lblVersao.Text = "Versão 1.0";
+            this.lblVersao.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label4
+            // lblEquipe
             // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label4.Location = new System.Drawing.Point(3, 95);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(230, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Desenvolvido por: Renan; Cayc; Jão Francisco";
+            this.lblEquipe.AutoSize = false;
+            this.lblEquipe.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblEquipe.ForeColor = System.Drawing.Color.White;
+            this.lblEquipe.Location = new System.Drawing.Point(0, 115);
+            this.lblEquipe.Name = "lblEquipe";
+            this.lblEquipe.Size = new System.Drawing.Size(400, 20);
+            this.lblEquipe.TabIndex = 3;
+            this.lblEquipe.Text = "Equipe:";
+            this.lblEquipe.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label5
+            // lblMembros
             // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label5.Location = new System.Drawing.Point(66, 223);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(290, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "© 2026 RCJ desenvolvimento. Todos os direitos reservados";
+            this.lblMembros.AutoSize = false;
+            this.lblMembros.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblMembros.ForeColor = System.Drawing.Color.White;
+            this.lblMembros.Location = new System.Drawing.Point(0, 140);
+            this.lblMembros.Name = "lblMembros";
+            this.lblMembros.Size = new System.Drawing.Size(400, 20);
+            this.lblMembros.TabIndex = 4;
+            this.lblMembros.Text = "Renan Carvalho dos Santos | João | Cayc";
+            this.lblMembros.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblCopyright
+            // 
+            this.lblCopyright.AutoSize = false;
+            this.lblCopyright.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.lblCopyright.ForeColor = System.Drawing.Color.White;
+            this.lblCopyright.Location = new System.Drawing.Point(0, 190);
+            this.lblCopyright.Name = "lblCopyright";
+            this.lblCopyright.Size = new System.Drawing.Size(400, 18);
+            this.lblCopyright.TabIndex = 5;
+            this.lblCopyright.Text = "© 2026 RCJ Desenvolvimento. Todos os direitos reservados.";
+            this.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnFechar
+            // 
+            this.btnFechar.BackColor = System.Drawing.Color.FromArgb(0, 120, 215);
+            this.btnFechar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFechar.ForeColor = System.Drawing.Color.White;
+            this.btnFechar.Location = new System.Drawing.Point(175, 280);
+            this.btnFechar.Name = "btnFechar";
+            this.btnFechar.Size = new System.Drawing.Size(150, 35);
+            this.btnFechar.TabIndex = 1;
+            this.btnFechar.Text = "Fechar";
+            this.btnFechar.UseVisualStyleBackColor = false;
+            this.btnFechar.Click += new System.EventHandler(this.btnFechar_Click);
             // 
             // frmSobre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(511, 320);
-            this.Controls.Add(this.panel1);
-            this.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.BackColor = System.Drawing.Color.FromArgb(30, 30, 45);
+            this.ClientSize = new System.Drawing.Size(500, 340);
+            this.Controls.Add(this.btnFechar);
+            this.Controls.Add(this.pnlInfo);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "frmSobre";
-            this.Text = "SOBRE O PROJETO";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Sobre — Hotel California";
+            this.pnlInfo.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel pnlInfo;
+        private System.Windows.Forms.Label lblNome;
+        private System.Windows.Forms.Label lblDescricao;
+        private System.Windows.Forms.Label lblVersao;
+        private System.Windows.Forms.Label lblEquipe;
+        private System.Windows.Forms.Label lblMembros;
+        private System.Windows.Forms.Label lblCopyright;
+        private System.Windows.Forms.Button btnFechar;
     }
 }
