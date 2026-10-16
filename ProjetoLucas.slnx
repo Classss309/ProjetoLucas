@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
   <Project Path="ProjetoLucas/ProjetoLucas.csproj" Id="0823478e-040e-42a5-a6c8-4dd3dea6fca2" />
 </Solution>

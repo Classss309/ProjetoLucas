@@ -339,7 +339,6 @@
             this.Name = "frmCadastroEndereco";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cadastro de Endereços";
-            this.Load += new System.EventHandler(this.frmCadastroEndereco_Load);
             this.grpDados.ResumeLayout(false);
             this.grpDados.PerformLayout();
             this.pnlBotoes.ResumeLayout(false);

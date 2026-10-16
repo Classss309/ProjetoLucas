@@ -3,23 +3,25 @@ using ProjetoLucas.Models;
 using System;
 using System.Data.SqlClient;
 using System.Windows.Forms;
-
 namespace ProjetoLucas.View
 {
     public partial class frmCadastroEndereco : Form
     {
+
+        // Aqui eu deixei 0 para ficar mais fácil de dar o retorno do id vazio vazias (Sem seleção)
         int idAtual = 0;
         EnderecoController ctrlEnd = new EnderecoController();
 
+        //Carregar tela
         public frmCadastroEndereco()
         {
             InitializeComponent();
-        }
-
-        private void frmCadastroEndereco_Load(object sender, EventArgs e)
-        {
+            //Já Chamei o Carregar grid para já chamar a tela populada.
             CarregarGrid();
         }
+
+
+        #region Metodos
 
         private void CarregarGrid()
         {
@@ -37,66 +39,92 @@ namespace ProjetoLucas.View
             cboEstado.SelectedIndex = -1;
             txtCEP.Text = "";
         }
+        void VerificarCampos()
+        {
+            Endereco endereco = new Endereco();
+            try
+            {
+                TextBox[] campos = { txtBairro, txtCidade, txtCEP, txtLogradouro, txtNumero };
+
+                for (int i = 0; i < campos.Length; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(campos[i].Text))
+                    {
+                        MessageBox.Show("Preencha todos os campos.");
+                        return;
+                    }
+                }
+                endereco.Logradouro = txtLogradouro.Text;
+                endereco.Numero = txtNumero.Text;
+                endereco.Complemento = txtComplemento.Text;
+                endereco.Bairro = txtBairro.Text;
+                endereco.Cidade = txtCidade.Text;
+                endereco.Estado = cboEstado.Text;
+                endereco.CEP = txtCEP.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Não foi possível concluir a operação. Detalhes: {ex.Message}"
+                );
+            }
+
+        }
+        #endregion
+        #region Botões
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (txtLogradouro.Text == "")
-            {
-                MessageBox.Show("Informe o logradouro.");
-                return;
-            }
-
-            Endereco end = new Endereco();
-            end.IdEndereco  = idAtual;
-            end.Logradouro  = txtLogradouro.Text;
-            end.Numero      = txtNumero.Text;
-            end.Complemento = txtComplemento.Text;
-            end.Bairro      = txtBairro.Text;
-            end.Cidade      = txtCidade.Text;
-            end.Estado      = cboEstado.SelectedItem != null ? cboEstado.SelectedItem.ToString() : "";
-            end.CEP         = txtCEP.Text;
-
+            VerificarCampos();           
+            CarregarGrid();
+            LimparCampos();
+        }
+        private void btnNovo_Click(object sender, EventArgs e)
+        {
+            Endereco endereco = new Endereco();
             if (idAtual == 0)
-                ctrlEnd.Inserir(end);
+                ctrlEnd.Inserir(endereco);
             else
-                ctrlEnd.Alterar(end);
-
-            MessageBox.Show("Salvo com sucesso!");
+            {
+                MessageBox.Show($"O endereço de código{idAtual} já existe, Deseja Alterar?", 
+                    "Confirmação",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if(DialogResult == DialogResult.Yes)
+                {
+                    ctrlEnd.Alterar(endereco);
+                }
+            }
+            VerificarCampos();
             LimparCampos();
             CarregarGrid();
         }
 
-        private void btnNovo_Click(object sender, EventArgs e)
-        {
-            LimparCampos();
-        }
+
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
-            if (idAtual == 0)
-            {
-                MessageBox.Show("Selecione um endereço para excluir.");
-                return;
-            }
-
             try
             {
                 int resultado = ctrlEnd.Excluir(idAtual);
 
-                if (resultado < 0)
+                if (resultado > 0)
                 {
                     MessageBox.Show("Endereco excluída com sucesso!");
                     LimparCampos();
                     CarregarGrid();
                 }
-                else
+                if (idAtual == 0)
                 {
-                    MessageBox.Show("Não foi possível excluir Endereco.");
+                    MessageBox.Show("Selecione um endereço para excluir.");
+                    return;
                 }
             }
             catch (SqlException ex)
             {
-                MessageBox.Show($"Ocorreu um erro ao excluir Endereco. {ex.Message}", "Falha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if(ex.Number == 547)
+                MessageBox.Show($"Não foi possível excluir o Endereço, existe uma Reserva vinculada ao Hotel.", "Falha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                LimparCampos();
             }
 
         }
@@ -111,17 +139,22 @@ namespace ProjetoLucas.View
 
         private void dgvEnderecos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
-
-            DataGridViewRow row = dgvEnderecos.Rows[e.RowIndex];
-            idAtual             = Convert.ToInt32(row.Cells["IdEndereco"].Value);
-            txtLogradouro.Text  = row.Cells["Logradouro"].Value.ToString();
-            txtNumero.Text      = row.Cells["Numero"].Value.ToString();
-            txtComplemento.Text = row.Cells["Complemento"].Value.ToString();
-            txtBairro.Text      = row.Cells["Bairro"].Value.ToString();
-            txtCidade.Text      = row.Cells["Cidade"].Value.ToString();
-            cboEstado.SelectedItem = row.Cells["Estado"].Value.ToString().Trim();
-            txtCEP.Text         = row.Cells["CEP"].Value.ToString();
+            if (e.RowIndex < 0)
+            {
+                MessageBox.Show("Nenhuma Linha encontrada");
+            }
+            DataGridViewRow linha = dgvEnderecos.Rows[e.RowIndex];
+            idAtual = Convert.ToInt32(linha.Cells["IdEndereco"].Value);
+            txtLogradouro.Text = linha.Cells["Logradouro"].Value.ToString();
+            txtNumero.Text = linha.Cells["Numero"].Value.ToString();
+            txtComplemento.Text = linha.Cells["Complemento"].Value.ToString();
+            txtBairro.Text = linha.Cells["Bairro"].Value.ToString();
+            txtCidade.Text = linha.Cells["Cidade"].Value.ToString();
+            cboEstado.SelectedItem = linha.Cells["Estado"].Value.ToString().Trim();
+            txtCEP.Text = linha.Cells["CEP"].Value.ToString();
         }
+        #endregion
     }
-}
+
+
+}   

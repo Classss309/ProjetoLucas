@@ -14,6 +14,7 @@ namespace ProjetoLucas.View
         public frmCadastroHospede()
         {
             InitializeComponent();
+            CarregarGrid();
         }
 
         private void frmCadastroHospede_Load(object sender, EventArgs e)
@@ -85,7 +86,7 @@ namespace ProjetoLucas.View
             {
                 int resultado = ctrl.Excluir(idAtual);
 
-                if (resultado > 0)
+                if (resultado < 0)
                 {
                     MessageBox.Show("Cadastro de Hospede excluído com sucesso!");
                     LimparCampos();
